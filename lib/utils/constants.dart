@@ -7,6 +7,7 @@ const String reservationCancelled = 'Cancelled';
 const String reservationActive = 'Active';
 const String reservationExpired = 'Expired';
 const String emptyFieldErrMessage = 'This field must not be empty';
+const String emptyDateErrMessage = 'Please select a departure date';
 const String accessToken = 'accessToken';
 const String loginTime = 'loginTime';
 const String expirationDuration = 'expirationDuration';
@@ -21,22 +22,38 @@ const String routeNameAddSchedulePage = 'add_schedule';
 const String routeNameScheduleListPage = 'schedule_list';
 const String routeNameReservationPage = 'reservation';
 
-
 const cities = [
-  'Dhaka',
-  'Chittagong',
-  'Sylhet',
-  'Bandarban',
-  'Rajshahi',
-  'Khagrachari',
-  'Rangamati',
+  'Berlin',
+  'Munich',
+  'Milan',
+  'Paris',
+  'Athina',
+  'Barcelona',
+  'Prague',
 ];
 
 enum ResponseStatus {
-  SAVED, FAILED, UNAUTHORIZED, AUTHORIZED, EXPIRED, NONE,
+  SAVED,
+  FAILED,
+  UNAUTHORIZED,
+  AUTHORIZED,
+  EXPIRED,
+  NONE,
 }
 
 const busTypes = [busTypeACBusiness, busTypeACEconomy, busTypeNonAc];
 
-const seatLabelList = ['A','B','C','D','E','F','G','H','I','J','K','L'];
-
+const seatLabelList = [
+  'A',
+  'B',
+  'C',
+  'D',
+  'E',
+  'F',
+  'G',
+  'H',
+  'I',
+  'J',
+  'K',
+  'L'
+];

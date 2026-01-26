@@ -13,8 +13,8 @@ class TempDB {
   ];
 
   static List<BusRoute> tableRoute = [
-    BusRoute(routeId: 1, routeName: 'Dhaka-Sylhet', cityFrom: 'Dhaka', cityTo: 'Sylhet', distanceInKm: 250),
-    BusRoute(routeId: 2, routeName: 'Sylhet-Dhaka', cityFrom: 'Sylhet', cityTo: 'Dhaka', distanceInKm: 250),
+    BusRoute(routeId: 1, routeName: 'Berlin-Paris', cityFrom: 'Berlin', cityTo: 'Paris', distanceInKm: 250),
+    BusRoute(routeId: 2, routeName: 'Paris-Berlin', cityFrom: 'Paris', cityTo: 'Berlin', distanceInKm: 250),
   ];
   static List<BusSchedule> tableSchedule = [
     BusSchedule(scheduleId: 1, bus: tableBus[0], busRoute: tableRoute[0], departureTime: '18:00', ticketPrice: 2000,),
