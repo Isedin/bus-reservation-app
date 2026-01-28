@@ -1,5 +1,7 @@
+import 'package:bus_reservation_flutter_starter/customwidgets/seat_plan_view.dart';
 import 'package:bus_reservation_flutter_starter/models/bus_schedule.dart';
 import 'package:bus_reservation_flutter_starter/utils/colors.dart';
+import 'package:bus_reservation_flutter_starter/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class SeatPlanPage extends StatefulWidget {
@@ -84,6 +86,28 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
                       'Selected: $value',
                       style: const TextStyle(fontSize: 16),
                     )),
+            Expanded(
+              child: SingleChildScrollView(
+                child: SeatPlanView(
+                  onSeatSelected: (value, seat) {
+                    setState(() {
+                      if (value) {
+                        selectedSeats.add(seat);
+                      } else {
+                        selectedSeats.remove(seat);
+                      }
+                      totalSeatBooked = selectedSeats.length;
+                      bookedSeatNumbers = selectedSeats.join(', ');
+                      selectedSeatStringNotifier.value = bookedSeatNumbers;
+                    });
+                  },
+                  totalSeatBooked: totalSeatBooked,
+                  bookedSeatsNumbers: bookedSeatNumbers,
+                  totalSeats: schedule.bus.totalSeat,
+                  isBusinessClass: schedule.bus.busType == busTypeACBusiness,
+                ),
+              ),
+            ),
             OutlinedButton(
                 onPressed: () {}, child: const Text('Proceed to Book'))
           ],
