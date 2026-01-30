@@ -1,8 +1,10 @@
 import 'package:bus_reservation_flutter_starter/customwidgets/seat_plan_view.dart';
 import 'package:bus_reservation_flutter_starter/models/bus_schedule.dart';
+import 'package:bus_reservation_flutter_starter/providers/app_data_provider.dart';
 import 'package:bus_reservation_flutter_starter/utils/colors.dart';
 import 'package:bus_reservation_flutter_starter/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SeatPlanPage extends StatefulWidget {
   const SeatPlanPage({super.key});
@@ -26,7 +28,22 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
     final argList = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
     schedule = argList[0];
     departureDate = argList[1];
+    _getData();
     super.didChangeDependencies();
+  }
+
+  _getData() async {
+    final resList = await Provider.of<AppDataProvider>(context, listen: false)
+        .getReservationsByScheduleAndDepartureDate(
+            schedule.scheduleId!, departureDate);
+    List<String> seats = [];
+    for (var res in resList) {
+      totalSeatBooked += res.totalSeatBooked;
+      seats.addAll(res.seatNumbers.split(', '));
+    }
+    bookedSeatNumbers = seats.join(', ');
+    // isDataLoading = false;
+    // setState(() {});
   }
 
   @override
@@ -108,8 +125,30 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
                 ),
               ),
             ),
-            OutlinedButton(
-                onPressed: () {}, child: const Text('Proceed to Book'))
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: OutlinedButton(
+                    onPressed: () {
+                      if (selectedSeats.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content:
+                                    Text('Please select at least one seat')));
+                        return;
+                      }
+                      Navigator.pushNamed(
+                          context, routeNameBookingConfirmationPage,
+                          arguments: [
+                            departureDate,
+                            schedule,
+                            selectedSeatStringNotifier.value,
+                            selectedSeats.length
+                          ]);
+                    },
+                    child: const Text('Proceed to Book')),
+              ),
+            )
           ],
         ),
       ),

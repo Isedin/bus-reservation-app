@@ -65,9 +65,12 @@ class DummyDataSource extends DataSource {
 
   @override
   Future<List<BusReservation>> getReservationsByScheduleAndDepartureDate(
-      int scheduleId, String departureDate) {
-    // TODO: implement getReservationsByScheduleAndDepartureDate
-    throw UnimplementedError();
+      int scheduleId, String departureDate) async {
+    return TempDB.tableReservation
+        .where((reservation) =>
+            reservation.busSchedule.scheduleId == scheduleId &&
+            reservation.departureDate == departureDate)
+        .toList();
   }
 
   @override
