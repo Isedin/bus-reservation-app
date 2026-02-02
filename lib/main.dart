@@ -9,8 +9,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
-    create: (context) => AppDataProvider(),
-    child: const MyApp()));
+      create: (context) => AppDataProvider(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -23,12 +22,13 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
           primarySwatch: Colors.lightGreen, brightness: Brightness.dark),
-      home: const SearchPage(),
+      initialRoute: routeNameHome,
       routes: {
         routeNameHome: (context) => const SearchPage(),
         routeNameSearchResultPage: (context) => const SearchResultPage(),
         routeNameSeatPlanPage: (context) => const SeatPlanPage(),
-        routeNameBookingConfirmationPage: (context) => const BookingConfirmationPage(),
+        routeNameBookingConfirmationPage: (context) =>
+            const BookingConfirmationPage(),
       },
     );
   }

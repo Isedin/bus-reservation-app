@@ -36,6 +36,9 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
     final resList = await Provider.of<AppDataProvider>(context, listen: false)
         .getReservationsByScheduleAndDepartureDate(
             schedule.scheduleId!, departureDate);
+    setState(() {
+      isDataLoading = false;
+    });
     List<String> seats = [];
     for (var res in resList) {
       totalSeatBooked += res.totalSeatBooked;
@@ -103,28 +106,29 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
                       'Selected: $value',
                       style: const TextStyle(fontSize: 16),
                     )),
-            Expanded(
-              child: SingleChildScrollView(
-                child: SeatPlanView(
-                  onSeatSelected: (value, seat) {
-                    setState(() {
-                      if (value) {
-                        selectedSeats.add(seat);
-                      } else {
-                        selectedSeats.remove(seat);
-                      }
-                      totalSeatBooked = selectedSeats.length;
-                      bookedSeatNumbers = selectedSeats.join(', ');
-                      selectedSeatStringNotifier.value = bookedSeatNumbers;
-                    });
-                  },
-                  totalSeatBooked: totalSeatBooked,
-                  bookedSeatsNumbers: bookedSeatNumbers,
-                  totalSeats: schedule.bus.totalSeat,
-                  isBusinessClass: schedule.bus.busType == busTypeACBusiness,
+            if (!isDataLoading)
+              Expanded(
+                child: SingleChildScrollView(
+                  child: SeatPlanView(
+                    onSeatSelected: (value, seat) {
+                      setState(() {
+                        if (value) {
+                          selectedSeats.add(seat);
+                        } else {
+                          selectedSeats.remove(seat);
+                        }
+                        totalSeatBooked = selectedSeats.length;
+                        bookedSeatNumbers = selectedSeats.join(', ');
+                        selectedSeatStringNotifier.value = bookedSeatNumbers;
+                      });
+                    },
+                    totalSeatBooked: totalSeatBooked,
+                    bookedSeatsNumbers: bookedSeatNumbers,
+                    totalSeats: schedule.bus.totalSeat,
+                    isBusinessClass: schedule.bus.busType == busTypeACBusiness,
+                  ),
                 ),
               ),
-            ),
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
