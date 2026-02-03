@@ -1,4 +1,3 @@
-import 'package:bus_reservation_flutter_starter/models/bus_model.dart';
 import 'package:bus_reservation_flutter_starter/models/bus_route.dart';
 import 'package:bus_reservation_flutter_starter/models/bus_schedule.dart';
 import 'package:bus_reservation_flutter_starter/providers/app_data_provider.dart';
@@ -101,20 +100,6 @@ class ScheduleItemView extends StatelessWidget {
                 ],
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //     children: [
-            //       Text(
-            //         'From: ${schedule.busRoute.cityFrom}',
-            //         style: const TextStyle(fontSize: 17),
-            //       ),
-            //       Text('To: ${schedule.busRoute.cityTo}',
-            //           style: const TextStyle(fontSize: 17)),
-            //     ],
-            //   ),
-            // )
           ],
         ),
       ),

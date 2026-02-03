@@ -1,3 +1,4 @@
+import 'package:bus_reservation_flutter_starter/drawers/main_drawer.dart';
 import 'package:bus_reservation_flutter_starter/providers/app_data_provider.dart';
 import 'package:bus_reservation_flutter_starter/utils/constants.dart';
 import 'package:bus_reservation_flutter_starter/utils/helper_functions.dart';
@@ -19,6 +20,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const MainDrawer(),
       appBar: AppBar(
         title: const Text('Search Page'),
       ),
@@ -109,14 +111,13 @@ class _SearchPageState extends State<SearchPage> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    ).then((selectedDate) {
-      if (selectedDate != null) {
-        setState(() {
-          departureDate = selectedDate;
-        });
-      }
-    });
+      lastDate: DateTime.now().add(const Duration(days: 7)),
+    );
+    if (selectedDate != null) {
+      setState(() {
+        departureDate = selectedDate;
+      });
+    }
   }
 
   void _search() {
