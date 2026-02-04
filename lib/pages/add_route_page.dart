@@ -1,5 +1,8 @@
 import 'package:bus_reservation_flutter_starter/datasource/temp_db.dart';
+import 'package:bus_reservation_flutter_starter/providers/app_data_provider.dart';
+import 'package:bus_reservation_flutter_starter/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/bus_route.dart';
 import '../utils/constants.dart';
@@ -39,9 +42,9 @@ class _AddRoutePageState extends State<AddRoutePage> {
                 hint: const Text('From'),
                 items: cities
                     .map((e) => DropdownMenuItem<String>(
-                  value: e,
-                  child: Text(e),
-                ))
+                          value: e,
+                          child: Text(e),
+                        ))
                     .toList(),
               ),
               const SizedBox(
@@ -58,9 +61,9 @@ class _AddRoutePageState extends State<AddRoutePage> {
                 hint: const Text('To'),
                 items: cities
                     .map((e) => DropdownMenuItem<String>(
-                  value: e,
-                  child: Text(e),
-                ))
+                          value: e,
+                          child: Text(e),
+                        ))
                     .toList(),
               ),
               const SizedBox(
@@ -109,8 +112,17 @@ class _AddRoutePageState extends State<AddRoutePage> {
         cityTo: to!,
         distanceInKm: double.parse(distanceController.text),
       );
+      Provider.of<AppDataProvider>(context, listen: false)
+          .addRoute(route)
+          .then((response) {
+        if (response.responseStatus == ResponseStatus.SAVED) {
+          showMsg(context, response.message);
+          resetFields();
+        }
+      });
     }
   }
+
   @override
   void dispose() {
     distanceController.dispose();

@@ -1,5 +1,8 @@
 import 'package:bus_reservation_flutter_starter/datasource/temp_db.dart';
+import 'package:bus_reservation_flutter_starter/providers/app_data_provider.dart';
+import 'package:bus_reservation_flutter_starter/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/bus_model.dart';
 import '../utils/constants.dart';
@@ -37,22 +40,21 @@ class _AddBusPageState extends State<AddBusPage> {
                   });
                 },
                 validator: (value) {
-                  if(value == null || value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return 'Please select a Bus Type';
                   }
                   return null;
                 },
                 decoration: const InputDecoration(
-                    errorStyle: TextStyle(color: Colors.white70)
-                ),
+                    errorStyle: TextStyle(color: Colors.white70)),
                 isExpanded: true,
                 initialValue: busType,
                 hint: const Text('Select Bus Type'),
                 items: busTypes
                     .map((e) => DropdownMenuItem<String>(
-                  value: e,
-                  child: Text(e),
-                ))
+                          value: e,
+                          child: Text(e),
+                        ))
                     .toList(),
               ),
               const SizedBox(
@@ -129,13 +131,21 @@ class _AddBusPageState extends State<AddBusPage> {
   void addBus() {
     if (_formKey.currentState!.validate()) {
       final bus = Bus(
-        busId: TempDB.tableBus.length + 1, // remove this line if you save into MySql DB
+        busId: TempDB.tableBus.length +
+            1, // remove this line if you save into MySql DB
         busName: nameController.text,
         busNumber: numberController.text,
         busType: busType!,
         totalSeat: int.parse(seatController.text),
       );
-
+      Provider.of<AppDataProvider>(context, listen: false)
+          .addBus(bus)
+          .then((response) {
+        if (response.responseStatus == ResponseStatus.SAVED) {
+          showMsg(context, response.message);
+          resetFields();
+        }
+      });
     }
   }
 
