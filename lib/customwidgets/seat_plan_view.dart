@@ -124,10 +124,10 @@ class Seat extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
             color: isBooked
-                ? seatBookedColor // 🔴 bukirano
+                ? seatBookedColor // booked seat
                 : (isSelected
-                    ? seatSelectedColor // 🟢 selektovano
-                    : seatAvailableColor), // ⚪ dostupno
+                    ? seatSelectedColor // selected seat
+                    : seatAvailableColor), // available seat
             borderRadius: BorderRadius.circular(8.0),
             boxShadow: isBooked
                 ? null
