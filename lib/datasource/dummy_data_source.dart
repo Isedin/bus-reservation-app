@@ -63,9 +63,10 @@ class DummyDataSource extends DataSource {
   }
 
   @override
-  Future<List<BusReservation>> getReservationsByMobile(String mobile) {
-    // TODO: implement getReservationsByMobile
-    throw UnimplementedError();
+  Future<List<BusReservation>> getReservationsByMobile(String mobile) async {
+    return TempDB.tableReservation
+        .where((reservation) => reservation.customer.mobile == mobile)
+        .toList();
   }
 
   @override

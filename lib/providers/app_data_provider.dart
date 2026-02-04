@@ -25,7 +25,7 @@ class AppDataProvider extends ChangeNotifier {
     return _dataSource.addReservation(reservation);
   }
 
-  Future<void> getAllReservations() async {
+  Future<List<BusReservation>> getAllReservations() async {
     _reservationList = await _dataSource.getAllReservation();
     final validKeys = _reservationList
         .map((r) => _expansionKeyFor(r))
@@ -33,6 +33,11 @@ class AppDataProvider extends ChangeNotifier {
         .toSet();
     _expandedByKey.removeWhere((k, v) => !validKeys.contains(k));
     notifyListeners();
+    return _reservationList;
+  }
+
+  Future<List<BusReservation>> getReservationsByMobile(String mobile) {
+    return _dataSource.getReservationsByMobile(mobile);
   }
 
   int? _expansionKeyFor(BusReservation r) {
@@ -68,8 +73,9 @@ class AppDataProvider extends ChangeNotifier {
         scheduleId, departureDate);
   }
 
-  List<ReservationExpansionItem> getExpansionItems() {
-    return _reservationList.map((reservation) {
+  List<ReservationExpansionItem> getExpansionItems(
+      List<BusReservation> reservationList) {
+    return reservationList.map((reservation) {
       return ReservationExpansionItem(
         header: ReservationExpansionHeader(
           reservationId: reservation.reservationId,
