@@ -186,7 +186,7 @@ class _BookingConfirmationPageState extends State<BookingConfirmationPage> {
       final reservation = BusReservation(
           customer: customer,
           busSchedule: schedule,
-          timestamp: DateTime.now().microsecondsSinceEpoch,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
           departureDate: departureDate,
           totalSeatBooked: totalSeatsBooked,
           seatNumbers: seatNumbers,

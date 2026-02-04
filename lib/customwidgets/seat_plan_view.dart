@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class SeatPlanView extends StatelessWidget {
   final int totalSeats;
   final String bookedSeatsNumbers;
+  final List<String> selectedSeats;
   final int totalSeatBooked;
   final bool isBusinessClass;
   final Function(bool, String) onSeatSelected;
@@ -14,7 +15,8 @@ class SeatPlanView extends StatelessWidget {
       required this.bookedSeatsNumbers,
       required this.totalSeatBooked,
       required this.isBusinessClass,
-      required this.onSeatSelected});
+      required this.onSeatSelected,
+      required this.selectedSeats});
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class SeatPlanView extends StatelessWidget {
     final List<String> bookedSeatsList = bookedSeatsNumbers.isEmpty
         ? []
         : bookedSeatsNumbers.split(',').map((e) => e.trim()).toList();
+    final Set<String> selectedSet = selectedSeats.map((e) => e.trim()).toSet();
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
       padding: const EdgeInsets.all(8.0),
@@ -67,6 +70,8 @@ class SeatPlanView extends StatelessWidget {
                               label: seatArrangement[i][j],
                               isBooked: bookedSeatsList
                                   .contains(seatArrangement[i][j]),
+                              isSelected:
+                                  selectedSet.contains(seatArrangement[i][j]),
                               onSelect: (selected) {
                                 onSeatSelected(selected, seatArrangement[i][j]);
                               }),
@@ -90,32 +95,27 @@ class SeatPlanView extends StatelessWidget {
   }
 }
 
-class Seat extends StatefulWidget {
+class Seat extends StatelessWidget {
   final String label;
   final bool isBooked;
+  final bool isSelected;
   final Function(bool) onSelect;
-  const Seat(
-      {super.key,
-      required this.label,
-      required this.isBooked,
-      required this.onSelect});
 
-  @override
-  State<Seat> createState() => _SeatState();
-}
+  const Seat({
+    super.key,
+    required this.label,
+    required this.isBooked,
+    required this.isSelected,
+    required this.onSelect,
+  });
 
-class _SeatState extends State<Seat> {
-  bool selected = false;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: widget.isBooked
+      onTap: isBooked
           ? null
           : () {
-              setState(() {
-                selected = !selected;
-              });
-              widget.onSelect(selected);
+              onSelect(!isSelected);
             },
       child: Container(
         margin: const EdgeInsets.all(8.0),
@@ -123,11 +123,13 @@ class _SeatState extends State<Seat> {
         height: 40,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: widget.isBooked
-                ? seatBookedColor
-                : (selected ? seatSelectedColor : seatAvailableColor),
+            color: isBooked
+                ? seatBookedColor // 🔴 bukirano
+                : (isSelected
+                    ? seatSelectedColor // 🟢 selektovano
+                    : seatAvailableColor), // ⚪ dostupno
             borderRadius: BorderRadius.circular(8.0),
-            boxShadow: widget.isBooked
+            boxShadow: isBooked
                 ? null
                 : [
                     const BoxShadow(
@@ -143,11 +145,14 @@ class _SeatState extends State<Seat> {
                       spreadRadius: 1,
                     ),
                   ]),
-        child: Text(widget.label,
-            style: TextStyle(
-                color: selected ? Colors.white : Colors.grey,
-                fontWeight: FontWeight.bold,
-                fontSize: 16)),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.grey,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
       ),
     );
   }

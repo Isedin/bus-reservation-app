@@ -17,7 +17,7 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
   late BusSchedule schedule;
   late String departureDate;
   int totalSeatBooked = 0;
-  String bookedSeatNumbers = '';
+  String alreadyBookedSeatNumbers = '';
   List<String> selectedSeats = [];
   bool isFirst = true;
   bool isDataLoading = true;
@@ -25,11 +25,15 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!isFirst) return;
+    isFirst = false;
+
     final argList = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
     schedule = argList[0];
     departureDate = argList[1];
     _getData();
-    super.didChangeDependencies();
   }
 
   _getData() async {
@@ -41,12 +45,12 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
     });
     List<String> seats = [];
     for (var res in resList) {
-      totalSeatBooked += res.totalSeatBooked;
-      seats.addAll(res.seatNumbers.split(', '));
+      seats.addAll(res.seatNumbers.split(',').map((e) => e.trim()));
     }
-    bookedSeatNumbers = seats.join(', ');
-    // isDataLoading = false;
-    // setState(() {});
+    setState(() {
+      alreadyBookedSeatNumbers = seats.join(', ');
+      isDataLoading = false;
+    });
   }
 
   @override
@@ -110,6 +114,8 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
               Expanded(
                 child: SingleChildScrollView(
                   child: SeatPlanView(
+                    selectedSeats: selectedSeats, // ✅ dodaj
+                    bookedSeatsNumbers: alreadyBookedSeatNumbers,
                     onSeatSelected: (value, seat) {
                       setState(() {
                         if (value) {
@@ -117,13 +123,14 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
                         } else {
                           selectedSeats.remove(seat);
                         }
+
                         totalSeatBooked = selectedSeats.length;
-                        bookedSeatNumbers = selectedSeats.join(', ');
-                        selectedSeatStringNotifier.value = bookedSeatNumbers;
+
+                        final selectedString = selectedSeats.join(', ');
+                        selectedSeatStringNotifier.value = selectedString;
                       });
                     },
                     totalSeatBooked: totalSeatBooked,
-                    bookedSeatsNumbers: bookedSeatNumbers,
                     totalSeats: schedule.bus.totalSeat,
                     isBusinessClass: schedule.bus.busType == busTypeACBusiness,
                   ),
