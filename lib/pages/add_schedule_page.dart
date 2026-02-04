@@ -25,6 +25,13 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
   final priceController = TextEditingController();
   final discountController = TextEditingController();
   final feeController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,6 +169,10 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
   }
 
   void addSchedule() {
+    if (timeOfDay == null) {
+      showMsg(context, 'Please select departure time');
+      return;
+    }
     if (_formKey.currentState!.validate()) {
       final schedule = BusSchedule(
         scheduleId: TempDB.tableSchedule.length + 1,
@@ -172,6 +183,14 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
         discount: int.parse(discountController.text),
         processingFee: int.parse(feeController.text),
       );
+      Provider.of<AppDataProvider>(context, listen: false)
+          .addSchedule(schedule)
+          .then((response) {
+        if (response.responseStatus == ResponseStatus.SAVED) {
+          showMsg(context, response.message);
+          resetFields();
+        }
+      });
     }
   }
 
@@ -197,5 +216,10 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
     priceController.clear();
     discountController.clear();
     feeController.clear();
+  }
+
+  void _getData() {
+    Provider.of<AppDataProvider>(context, listen: false).getAllBus();
+    Provider.of<AppDataProvider>(context, listen: false).getAllBusRoutes();
   }
 }

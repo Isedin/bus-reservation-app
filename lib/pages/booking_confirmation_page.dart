@@ -36,6 +36,7 @@ class _BookingConfirmationPageState extends State<BookingConfirmationPage> {
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
     if (isFirst) {
       final argList =
           ModalRoute.of(context)!.settings.arguments as List<dynamic>;
